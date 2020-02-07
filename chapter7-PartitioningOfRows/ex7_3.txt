@@ -1,0 +1,17 @@
+SELECT 
+	SalesOrderID, 
+	TotalDue,
+	TotalDue - LAG(TotalDue) OVER(Order BY SalesOrderID)
+FROM SalesLT.SalesOrderHeader;
+
+/*
+ OUTPUT:
+	SalesOrderID TotalDue              
+	------------ --------------------- ---------------------
+	71774        972.785               NULL
+	71776        87.0851               -885.6999
+	71780        42452.6519            42365.5668
+	71782        43962.7901            1510.1382
+	71783        92663.5609            48700.7708
+	...
+*/
