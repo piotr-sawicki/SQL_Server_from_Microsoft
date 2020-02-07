@@ -123,4 +123,41 @@
 	...
 	```
 - **GROUPING SETS**
+	```SQL
+	SELECT CountryRegion, StateProvince, City, COUNT(*)
+	FROM SalesLT.Address
+	GROUP BY 
+		GROUPING SETS(
+			(CountryRegion, StateProvince, City),
+			(CountryRegion, StateProvince),
+			(CountryRegion, City));
+	```
+- **PIVOT**
+	```SQL
+	DROP TABLE #TabPivot;
+	SELECT TOP 20
+		PC.Name,
+		C.LastName,
+		SUM(OD.LineTotal) AS Total
+	INTO #TabPivot
+	FROM SalesLT.SalesOrderDetail AS OD
+	JOIN SalesLT.SalesOrderHeader AS OH
+		ON OH.SalesOrderID=OD.SalesOrderID
+	JOIN SalesLT.Product AS P
+		ON P.ProductID=OD.ProductID
+	JOIN SalesLT.ProductCategory AS PC
+		ON PC.ProductCategoryID=P.ProductCategoryID
+	JOIN SalesLT.Customer AS C
+		ON OH.CustomerID=C.CustomerID
+	GROUP BY PC.Name, C.LastName
+	ORDER BY PC.Name;
+
+	SELECT P.LastName, [Bike Racks]
+	FROM #TabPivot
+	PIVOT(
+		SUM(Total)
+		FOR Name IN ([Bike Racks])) AS P
+	```
+
+
 	
